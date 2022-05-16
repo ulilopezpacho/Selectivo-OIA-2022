@@ -2,24 +2,36 @@
 #include <vector>
 #include <stack>
 #include <algorithm>
+#include <cassert>
 
 using namespace std;
 
 int n;
 vector<vector<int>> arbol;
+string resultado = "";
 
-bool compareTree (int leave1, int leave2) {
+int compareTreeInterno (int leave1, int leave2) {
+    int izquierda = arbol[leave1].size();
+    int derecha = arbol[leave2].size();
 
-    if (arbol[leave1].empty()) return false;
-    if (arbol[leave2].empty()) return true;
-    
-    int size = int(min(arbol[leave1].size(), arbol[leave2].size()));
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < min(izquierda, derecha); i++) {
+        int siguienteIzquierda = arbol[leave1][i];
+        int siguienteDerecha = arbol[leave2][i];
 
+        int result = compareTreeInterno(siguienteIzquierda, siguienteDerecha);
+        if (result != 0) return result;
     }
 
-    if (recursionIzquierda.empty()) return true;
-    else return false;
+    if (izquierda == derecha) return 0;
+    if (izquierda > derecha) return -1;
+    if (izquierda < derecha) return 1;
+}
+
+bool compareTree (int leave1, int leave2) {
+    int comparacion = compareTreeInterno(leave1, leave2);
+    if (comparacion == -1) return true;
+    if (comparacion == 1) return false;
+    return true;
 }
 
 void ordenarArbol (int actual) {
@@ -27,15 +39,21 @@ void ordenarArbol (int actual) {
         ordenarArbol(a);
     }
 
-    sort(arbol.begin(), arbol.end(), compareTree);
+    sort(arbol[actual].begin(), arbol[actual].end(), compareTree);
+}
+
+void generateString (int actual) {
+    resultado += '(';
+    for (int a: arbol[actual]) {
+        generateString(a);
+    }
+    resultado += ')';
 }
 
 string minarbol(string &s) {
 
     n = s.size();
 
-    // Reconstrucción del arbol
-    
     stack<int> stack;
     int counter = 0;
     stack.push(0);
@@ -51,7 +69,8 @@ string minarbol(string &s) {
         }
     }
 
-    // Fin reconstrucción arbol
-
-
+    assert(stack.empty());
+    ordenarArbol(0);
+    generateString(0);
+    return resultado;
 }

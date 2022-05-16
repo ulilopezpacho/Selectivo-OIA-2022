@@ -37,21 +37,20 @@ long long hercules(long long H, vector<int> &c, vector<int> &d, vector<int> &r, 
     for (auto &element: dif) {
 
         const int i = element.second;
-
+        cout << i << endl;
         ll cortes = calcularCortes(actual, d[i], r[i], c[i]);
-        
         assert(cortes <= c[i]);
         cantidad += cortes;
         
         e.push_back(i);
         u.push_back(cortes);
-        
         elementoALista.insert({i, lap});
         after.erase(after.find(d[i]));
 
         const ll cabezasRemovidas = element.first * cortes;
-
-        if ((cortes < c[i]) || (cabezasRemovidas >= (actual - d[i]))) return cantidad;
+        cout << cortes << endl;
+        if ((cortes < c[i]) || (cabezasRemovidas >= (actual - r[i]))) return cantidad;
+        cout << "pasa" << endl;
 
         assert(cortes == ll(c[i]));
         actual -= cabezasRemovidas;
@@ -59,16 +58,14 @@ long long hercules(long long H, vector<int> &c, vector<int> &d, vector<int> &r, 
         pair<int,int> beforeActual, afterActual;
         if (!before.empty()) beforeActual = *(before.end());
         if (!after.empty()) afterActual = *(after.end());
-        // Revisar
+    
         if (!before.empty() && (actual - beforeActual.first) <= 0) {
             const int ubicacionE = elementoALista[beforeActual.second];
-
             if ((--e[ubicacionE]) <= 0) {
                 e.erase(e.begin() + ubicacionE);
                 u.erase(u.end() + ubicacionE);
                 cantidad--;
             }
-
             e.push_back(beforeActual.second);
             u.push_back(1);
             return cantidad;
@@ -79,7 +76,6 @@ long long hercules(long long H, vector<int> &c, vector<int> &d, vector<int> &r, 
             u.push_back(1);
             return cantidad + 1;
         }
-        // Revisar
 
         before.insert({r[i], i});
         lap++;

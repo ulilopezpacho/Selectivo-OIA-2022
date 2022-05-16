@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "minarbol.cpp"
 
 using namespace std;
 
