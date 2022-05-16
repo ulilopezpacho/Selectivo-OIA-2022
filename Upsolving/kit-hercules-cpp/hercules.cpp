@@ -5,6 +5,7 @@
 #include <map>
 #include <algorithm>
 #include <iostream>
+#include <cassert>
 
 using namespace std;
 
@@ -34,43 +35,57 @@ long long hercules(long long H, vector<int> &c, vector<int> &d, vector<int> &r, 
     int lap = 0;
 
     for (auto &element: dif) {
-        //cout << actual << " " << element.first << " " << element.second << " " << c[element.second] << endl;
 
         const int i = element.second;
 
         ll cortes = calcularCortes(actual, d[i], r[i], c[i]);
+        
+        assert(cortes <= c[i]);
         cantidad += cortes;
-
+        
         e.push_back(i);
         u.push_back(cortes);
+        
+        elementoALista.insert({i, lap});
+        after.erase(after.find(d[i]));
 
-        if (cortes < c[i]) return cantidad;
+        const ll cabezasRemovidas = element.first * cortes;
+
+        if ((cortes < c[i]) || (cabezasRemovidas >= (actual - d[i]))) return cantidad;
 
         assert(cortes == ll(c[i]));
-        actual -= element.first * cortes;
+        actual -= cabezasRemovidas;
 
-        const pair<int,int> beforeActual = *(before.end());
-        const pair<int,int> afterActual = *(after.end());
+        pair<int,int> beforeActual, afterActual;
+        if (!before.empty()) beforeActual = *(before.end());
+        if (!after.empty()) afterActual = *(after.end());
+        // Revisar
+        if (!before.empty() && (actual - beforeActual.first) <= 0) {
+            const int ubicacionE = elementoALista[beforeActual.second];
 
-        if ((actual - beforeActual.first) <= 0) {
-            e[elementoALista[beforeActual.second]]--;
+            if ((--e[ubicacionE]) <= 0) {
+                e.erase(e.begin() + ubicacionE);
+                u.erase(u.end() + ubicacionE);
+                cantidad--;
+            }
+
             e.push_back(beforeActual.second);
             u.push_back(1);
             return cantidad;
         }
 
-        if ((actual - afterActual.first) <= 0) {
+        if (!after.empty() && (actual - afterActual.first) <= 0) {
             e.push_back(afterActual.second);
             u.push_back(1);
-            return ++cantidad;
+            return cantidad + 1;
         }
-
+        // Revisar
 
         before.insert({r[i], i});
-        elementoALista.insert({i, lap});
-        after.erase(after.find(d[i]));
         lap++;
     }
 
+    e.clear();
+    u.clear();
     return -1;
 } 
