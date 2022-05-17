@@ -7,7 +7,7 @@
 using namespace std;
 
 int n;
-vector<vector<int>> arbol;
+vector<int> arbol [250001];
 string resultado = "";
 
 int compareTreeInterno (int leave1, int leave2) {
@@ -31,7 +31,7 @@ bool compareTree (int leave1, int leave2) {
     int comparacion = compareTreeInterno(leave1, leave2);
     if (comparacion == -1) return true;
     if (comparacion == 1) return false;
-    return true;
+    return false;
 }
 
 void ordenarArbol (int actual) {
@@ -56,12 +56,12 @@ string minarbol(string &s) {
 
     stack<int> stack;
     int counter = 0;
+
     stack.push(0);
 
     for (int i = 1; i < n; i++) {
         if (s[i] == '(') {
             counter++;
-            arbol.push_back(vector<int>());
             arbol[stack.top()].push_back(counter);
             stack.push(counter);
         } else {
@@ -69,7 +69,6 @@ string minarbol(string &s) {
         }
     }
 
-    assert(stack.empty());
     ordenarArbol(0);
     generateString(0);
     return resultado;
