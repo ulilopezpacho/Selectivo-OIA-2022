@@ -37,7 +37,6 @@ long long hercules(long long H, vector<int> &c, vector<int> &d, vector<int> &r, 
     for (auto &element: dif) {
 
         const int i = element.second;
-        cout << i << endl;
         ll cortes = calcularCortes(actual, d[i], r[i], c[i]);
         assert(cortes <= c[i]);
         cantidad += cortes;
@@ -48,9 +47,7 @@ long long hercules(long long H, vector<int> &c, vector<int> &d, vector<int> &r, 
         after.erase(after.find(d[i]));
 
         const ll cabezasRemovidas = element.first * cortes;
-        cout << cortes << endl;
         if ((cortes < c[i]) || (cabezasRemovidas >= (actual - r[i]))) return cantidad;
-        cout << "pasa" << endl;
 
         assert(cortes == ll(c[i]));
         actual -= cabezasRemovidas;
