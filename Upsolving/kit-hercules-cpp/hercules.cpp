@@ -18,7 +18,7 @@ ll calcularCortes (ll actual, ll d, ll r, ll c) {
 
 long long hercules(long long H, vector<int> &c, vector<int> &d, vector<int> &r, vector<int> &e, vector<int> &u) {
 
-    int n = c.size();
+    int n = int(c.size());
     ll actual = H, cantidad = 0;
 
     // Guardo en el set el r mas grande de las que ya saque, d mas grande que no usé
@@ -42,7 +42,7 @@ long long hercules(long long H, vector<int> &c, vector<int> &d, vector<int> &r, 
         cantidad += cortes;
         
         e.push_back(i);
-        u.push_back(cortes);
+        u.push_back(int(cortes));
         elementoALista.insert({i, lap});
         after.erase(after.find(d[i]));
 
